@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Player</title>
+    <link rel="style.css" href="styles.css" />
+  </head>
+  <style>
+  /* General Styles */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: white;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Landing Page */
+.content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+h1 {
+  font-size: clamp(2rem, 6vw, 4rem);
+  margin-bottom: 2rem;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+}
+button {
+  font-size: 1.5rem;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 20px;
+  background: hotpink;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 0 10px hotpink;
+  animation: glow 1.5s infinite alternate;
+  transition: 0.2s ease;
+}
+button:hover {
+  transform: scale(1.1);
+  background: deeppink;
+  box-shadow: 0 0 20px deeppink, 0 0 40px deeppink;
+}
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 10px hotpink, 0 0 20px hotpink;
+  }
+  50% {
+    box-shadow: 0 0 20px deeppink, 0 0 40px deeppink;
+  }
+  100% {
+    box-shadow: 0 0 10px hotpink, 0 0 20px hotpink;
+  }
+}
+
+/* Main Page */
+h2.subtitle {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  text-align: center;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+  position: relative;
+  z-index: 1;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  background: rgba(20, 20, 20, 0.92);
+  border-radius: 12px;
+  padding: 0.8rem;            /* smaller padding */
+  text-align: center;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.55);
+  max-width: 300px;          /* smaller card width */
+  width: 86%;
+  margin-bottom: 0.9rem;
+  transition: box-shadow 0.16s ease;
+  margin: 0 auto;
+}
+.glow {
+  animation: glow 1.5s infinite alternate;
+}
+
+.player {
+  position: relative;
+  width: 60vw;              /* a bit smaller proportionally */
+  max-width: 200px;        /* reduced maximum size */
+  aspect-ratio: 1/1;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #111 60%, #000 70%, #111 85%, #000 100%);
+  box-shadow: inset 0 0 16px rgba(255,255,255,0.03), inset 0 0 3px rgba(255,255,255,0.2), 0 6px 14px rgba(0,0,0,0.55);
+  border: 5px solid #111;  /* thinner vinyl border */
+  animation: spin 4s linear infinite;
+  animation-play-state: paused;
+  overflow: hidden;
+}
+.player::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 95%;
+  height: 95%;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.03) 0px,
+    rgba(255, 255, 255, 0.03) 2px,
+    transparent 3px,
+    transparent 6px
+  );
+}
+.center-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: none;
+  z-index: 2;
+  transition: opacity 0.38s ease;
+}
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.song-info {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #ffefc1;
+  transition: text-shadow 0.2s ease;
+}
+.song-info span {
+  display: block;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.pulse-glow {
+  animation: pulse 1s infinite alternate;
+}
+@keyframes pulse {
+  0% {
+    text-shadow: 0 0 5px #ff5f7e, 0 0 10px #ff5f7e;
+  }
+  50% {
+    text-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00ff;
+  }
+  100% {
+    text-shadow: 0 0 5px #ff5f7e, 0 0 10px #ff5f7e;
+  }
+}
+
+.controls {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.9rem;
+}
+.controls button,
+.controls .arrow {
+  padding: 0.46rem 0.86rem;
+  border: none;
+  border-radius: 36px;
+  cursor: pointer;
+  background: hotpink;
+  color: white;
+  font-size: 0.98rem;
+  font-weight: 700;
+  transition: transform 0.14s ease, background 0.14s ease;
+  min-width: 72px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.controls button:hover,
+.controls .arrow:hover {
+  transform: scale(1.04);
+  background: deeppink;
+}
+
+/* when arrows are inside controls we don't want absolute positioning */
+.controls .arrow {
+  position: static;
+  transform: none;
+  background: hotpink;
+  color: white;
+  box-shadow: none;
+}
+.controls .arrow[aria-label="Previous"] { margin-right: 4px; }
+.controls .arrow[aria-label="Next"] { margin-left: 4px; }
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  font-size: 1.25rem;
+  border: none;
+  background: none;
+  color: white;
+  cursor: pointer;
+  z-index: 6;
+  transition: transform 0.18s, color 0.18s;
+  padding: 0.18rem 0.35rem;
+  /* We'll use translate to center vertically and adjust horizontal in each side rule */
+  transform: translate(-50%, -50%);
+}
+
+/* Move arrows closer to the vinyl/player (centered). 
+   Adjust the 110px value if your player size changes. */
+.arrow-left {
+  left: calc(50% - 110px); /* just left of the vinyl */
+}
+.arrow-right {
+  left: calc(50% + 110px); /* just right of the vinyl */
+}
+
+.arrow:hover {
+  transform: translate(-50%, -50%) scale(1.12);
+  color: hotpink;
+}
+
+@media (max-width: 600px) {
+  .arrow-left { left: calc(50% - 90px); }
+  .arrow-right { left: calc(50% + 90px); }
+}
+@media (max-width: 420px) {
+  .arrow-left { left: calc(50% - 70px); }
+  .arrow-right { left: calc(50% + 70px); }
+  .arrow { font-size: 1.05rem; padding: 0.14rem 0.28rem; }
+}
+
+/* Progress Bar */
+.progress-container {
+  width: 80%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  margin: 1rem auto 0;
+  overflow: hidden;
+}
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  background: hotpink;
+  border-radius: 10px;
+  transition: width 0.2s linear;
+}
+footer {
+  text-align: center;
+  margin: 10px 15px;
+  font-size: 16px;
+}
+
+.home-btn {
+  display: inline-block;
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.22rem 0.5rem;   /* smaller button */
+  background: hotpink;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 0.75rem;       /* smaller font */
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 0 6px rgba(255, 105, 180, 0.9);
+  transition: background 0.16s, transform 0.16s;
+  z-index: 10;
+}
+.home-btn:hover {
+  background: deeppink;
+  transform: translateX(-50%) scale(1.03);
+}
+
+@media (max-width: 420px) {
+  .home-btn {
+    top: 8px;
+    padding: 0.18rem 0.44rem;
+    font-size: 0.7rem;
+    border-radius: 12px;
+  }
+}
+  </style>
+  <body>
+    <canvas id="confetti"></canvas>
+    <h2 class="subtitle">MY GO-TO SOUNDTRACK - TYLA</h2>
+
+    <div class="container" id="container">
+      <div class="player" id="vinyl">
+        <img
+          id="centerImg"
+          class="center-img"
+          src="/images/tyla.jpg"
+          alt="Album Art" />
+      </div>
+
+      <div class="song-info" id="songInfo">
+        <span id="songTitle">Song Title</span>
+        <span id="artistName">Artist Name</span>
+      </div>
+
+      <div class="controls">
+        <button class="arrow arrow-left" id="prevArrow" aria-label="Previous">⏮</button>
+        <button id="playPause" aria-label="Play/Pause">▶️ Play</button>
+        <button class="arrow arrow-right" id="nextArrow" aria-label="Next">⏭</button>
+      </div>
+
+      <audio id="audio"></audio>
+    </div>
+<nav>
+  <a href="index.html" class="home-btn">Back to Home</a>
+</nav>
+    <footer>
+      © 2025. Coded with ❤️ by
+      <a href=" https://www.linkedin.com/in/lesedi-mothelo/" target="_blank">
+        Lesedi Mothelo</a
+      >
+      deployed on
+      <a
+        href=" https://app.netlify.com/teams/lesedimothelo/projects"
+        target="_blank">
+        Netlify</a
+      >
+    </footer>
+    <script>
+    // ===== Confetti =====
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+const confettiPieces = [];
+const colors = [
+  "#FF5F7E",
+  "#FFD300",
+  "#3CE3FF",
+  "#8DFF5F",
+  "#FF9B00",
+  "#FF00FF",
+];
+for (let i = 0; i < 150; i++) {
+  confettiPieces.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 6 + 4,
+    dx: Math.random() * 2 - 1,
+    dy: Math.random() * 3 + 1,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    tilt: Math.random() * 10,
+    tiltAngleIncrement: Math.random() * 0.07 + 0.05,
+    tiltAngle: 0,
+  });
+}
+function drawConfetti() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  confettiPieces.forEach((p) => {
+    ctx.beginPath();
+    ctx.lineWidth = p.r;
+    ctx.strokeStyle = p.color;
+    ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+    ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+    ctx.stroke();
+  });
+  confettiPieces.forEach((p) => {
+    p.tiltAngle += p.tiltAngleIncrement;
+    p.y += p.dy;
+    p.x += p.dx;
+    p.tilt = Math.sin(p.tiltAngle) * 15;
+    if (p.y > canvas.height) {
+      p.y = -20;
+      p.x = Math.random() * canvas.width;
+    }
+  });
+  requestAnimationFrame(drawConfetti);
+}
+drawConfetti();
+    // ===== Music Player =====
+const songs = [
+  {
+    src: "/assets/songs/Tyla - IS IT.mp3",
+    img: "/images/tyla-cover-wwp.jpg",
+    title: "IS IT",
+    artist: "Tyla",
+    start: 1,
+    end: 55
+  },
+  {
+    src: "/assets/songs/Tyla - Jump.mp3",
+    img: "/images/tyla-jump.png",
+    title: "Jump",
+    artist: "Tyla",
+    start: 1,
+    end: 55
+  },
+  {
+    src: "/assets/songs/Tyla - MR. MEDIA.mp3",
+    img: "/images/tyla-cover-wwp.jpg",
+    title: "MR.MEDIA",
+    artist: "Tyla",
+    start: 1,
+    end: 55
+  }
+];
+let currentSong = 0;
+const audio = document.getElementById("audio");
+const vinyl = document.getElementById("vinyl");
+const centerImg = document.getElementById("centerImg");
+const playPauseBtn = document.getElementById("playPause");
+const container = document.getElementById("container");
+const songTitle = document.getElementById("songTitle");
+const artistName = document.getElementById("artistName");
+const songInfo = document.getElementById("songInfo");
+
+// Progress bar
+const progressContainer = document.createElement("div");
+progressContainer.className = "progress-container";
+const progressBar = document.createElement("div");
+progressBar.className = "progress-bar";
+progressContainer.appendChild(progressBar);
+container.appendChild(progressContainer);
+
+function loadSong(index) {
+  const s = songs[index];
+  centerImg.style.opacity = 0;
+  setTimeout(() => {
+    centerImg.src = s.img;
+    centerImg.style.opacity = 1;
+  }, 300);
+
+  songTitle.textContent = s.title;
+  artistName.textContent = s.artist;
+
+  audio.src = s.src;
+  audio.currentTime = s.start || 0;
+  audio.play();
+
+  vinyl.style.animationPlayState = "running";
+  container.classList.add("glow");
+  songInfo.classList.add("pulse-glow");
+  playPauseBtn.textContent = "⏸ Pause";
+
+  audio.ontimeupdate = () => {
+    if (s.end && audio.currentTime >= s.end) {
+      audio.pause();
+      vinyl.style.animationPlayState = "paused";
+      container.classList.remove("glow");
+      songInfo.classList.remove("pulse-glow");
+      playPauseBtn.textContent = "▶️ Play";
+    }
+    const progressPercent =
+      ((audio.currentTime - (s.start || 0)) /
+        ((s.end || audio.duration) - (s.start || 0))) *
+      100;
+    progressBar.style.width = `${progressPercent}%`;
+  };
+}
+
+playPauseBtn.addEventListener("click", () => {
+  if (audio.paused) {
+    audio.play();
+    vinyl.style.animationPlayState = "running";
+    container.classList.add("glow");
+    songInfo.classList.add("pulse-glow");
+    playPauseBtn.textContent = "⏸ Pause";
+  } else {
+    audio.pause();
+    vinyl.style.animationPlayState = "paused";
+    container.classList.remove("glow");
+    songInfo.classList.remove("pulse-glow");
+    playPauseBtn.textContent = "▶️ Play";
+  }
+});
+
+document.getElementById("nextArrow").addEventListener("click", () => {
+  currentSong = (currentSong + 1) % songs.length;
+  loadSong(currentSong);
+});
+document.getElementById("prevArrow").addEventListener("click", () => {
+  currentSong = (currentSong - 1 + songs.length) % songs.length;
+  loadSong(currentSong);
+});
+
+loadSong(currentSong);
+    </script>
+    <script.js src="script.js"></script>
+  </body>
+</html>

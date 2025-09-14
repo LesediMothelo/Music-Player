@@ -1,0 +1,270 @@
+/* General Styles */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: white;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Landing Page */
+.content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+h1 {
+  font-size: clamp(2rem, 6vw, 4rem);
+  margin-bottom: 2rem;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+}
+button {
+  font-size: 1.5rem;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 20px;
+  background: hotpink;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 0 10px hotpink;
+  animation: glow 1.5s infinite alternate;
+  transition: 0.2s ease;
+}
+button:hover {
+  transform: scale(1.1);
+  background: deeppink;
+  box-shadow: 0 0 20px deeppink, 0 0 40px deeppink;
+}
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 10px hotpink, 0 0 20px hotpink;
+  }
+  50% {
+    box-shadow: 0 0 20px deeppink, 0 0 40px deeppink;
+  }
+  100% {
+    box-shadow: 0 0 10px hotpink, 0 0 20px hotpink;
+  }
+}
+
+/* Main Page */
+h2.subtitle {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  text-align: center;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+  position: relative;
+  z-index: 1;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  background: rgba(20, 20, 20, 0.9);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  max-width: 400px;
+  width: 90%;
+  margin-bottom: 2rem;
+  transition: box-shadow 0.3s ease;
+}
+.glow {
+  animation: glow 1.5s infinite alternate;
+}
+
+.player {
+  position: relative;
+  width: 70vw;
+  max-width: 280px;
+  aspect-ratio: 1/1;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    #111 60%,
+    #000 70%,
+    #111 85%,
+    #000 100%
+  );
+  box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.05),
+    inset 0 0 5px rgba(255, 255, 255, 0.3), 0 10px 30px rgba(0, 0, 0, 0.6);
+  border: 8px solid #111;
+  animation: spin 4s linear infinite;
+  animation-play-state: paused;
+  overflow: hidden;
+}
+.player::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 95%;
+  height: 95%;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.03) 0px,
+    rgba(255, 255, 255, 0.03) 2px,
+    transparent 3px,
+    transparent 6px
+  );
+}
+.center-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 35%;
+  height: 35%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  z-index: 2;
+  transition: opacity 0.5s ease;
+}
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.song-info {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #ffefc1;
+  transition: text-shadow 0.2s ease;
+}
+.song-info span {
+  display: block;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.pulse-glow {
+  animation: pulse 1s infinite alternate;
+}
+@keyframes pulse {
+  0% {
+    text-shadow: 0 0 5px #ff5f7e, 0 0 10px #ff5f7e;
+  }
+  50% {
+    text-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00ff;
+  }
+  100% {
+    text-shadow: 0 0 5px #ff5f7e, 0 0 10px #ff5f7e;
+  }
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.controls button {
+  padding: 0.7rem 1rem;
+  border: none;
+  border-radius: 45px;
+  cursor: pointer;
+  background: hotpink;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: 0.2s ease;
+  min-width: 90px;
+}
+.controls button:hover {
+  transform: scale(1.05);
+  background: deeppink;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2rem;
+  border: none;
+  background: none;
+  color: white;
+  cursor: pointer;
+  z-index: 2;
+  transition: transform 0.2s, color 0.3s;
+}
+.arrow:hover {
+  transform: translateY(-50%) scale(1.2);
+  color: hotpink;
+}
+.arrow-left {
+  left: 10px;
+}
+.arrow-right {
+  right: 10px;
+}
+@media (max-width: 600px) {
+  .arrow {
+    font-size: 1.5rem;
+  }
+}
+
+/* Progress Bar */
+.progress-container {
+  width: 80%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  margin: 1rem auto 0;
+  overflow: hidden;
+}
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  background: hotpink;
+  border-radius: 10px;
+  transition: width 0.2s linear;
+}
+footer {
+  text-align: center;
+  margin: 20px 10;
+  font-size: 16px;
+}
+
+.home-btn {
+  display: inline-block;
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  padding: 0.7rem 1.5rem;
+  background: hotpink;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 0 10px hotpink;
+  transition: background 0.2s, transform 0.2s;
+  z-index: 10;
+}
+.home-btn:hover {
+  background: deeppink;
+  transform: scale(1.08);
+}
