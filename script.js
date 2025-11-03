@@ -76,7 +76,7 @@ const songs = [
     title: "Chanel",
     artist: "Tyla",
     start: 1,
-    end: 60
+    end: 57
   },
   {
     src: "/assets/songs/Tyla - MR. MEDIA.mp3",
@@ -167,4 +167,5 @@ document.getElementById("prevArrow").addEventListener("click", () => {
 });
 
 loadSong(currentSong);
+
 
