@@ -71,6 +71,13 @@ const songs = [
     start: 1,
     end: 55
   },
+    src: "/assets/songs/Tyla - Chanel.mp3",
+    img: "/images/tyla-chanel.jpg",
+    title: "Chanel",
+    artist: "Tyla",
+    start: 1,
+    end: 60
+  },
   {
     src: "/assets/songs/Tyla - MR. MEDIA.mp3",
     img: "/images/tyla-cover-wwp.jpg",
@@ -160,3 +167,4 @@ document.getElementById("prevArrow").addEventListener("click", () => {
 });
 
 loadSong(currentSong);
+
